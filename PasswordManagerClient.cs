@@ -57,7 +57,7 @@ namespace PasswordManagerClient
         public CommunicationProtocol LoginRequest(string userName)
         {
             byte[] bodyBytes = Encoding.ASCII.GetBytes(userName);
-            CommunicationProtocol answer = client.SendAndReceive("login_request", bodyBytes, "*", "ascii string");
+            CommunicationProtocol answer = client.SendAndReceive("login_request", bodyBytes, "*", "ascii");
 
             return answer;
         }
@@ -69,6 +69,46 @@ namespace PasswordManagerClient
             CommunicationProtocol answer = client.SendAndReceive("login_test", decryptedNumber, loginSession, "bytes");
 
             return answer;
+        }
+
+        public CommunicationProtocol GetPassword(string source, string loginSession)
+        {
+            byte[] bodyBytes = Encoding.ASCII.GetBytes(source);
+
+            CommunicationProtocol answer = client.SendAndReceive("get_password", bodyBytes, loginSession, "ascii");
+
+            return answer;
+        }
+
+        public CommunicationProtocol SetPassword(string source, string password, string loginSession)
+        {
+            byte[] passwordBytes = Encoding.ASCII.GetBytes(password);
+            byte[] encodedPassword = csp.Encrypt(passwordBytes, false);
+            string encodedPasswordStr = System.Convert.ToBase64String(encodedPassword);
+
+            string bodyJson = $"{{\"source\": \"{source}\", \"password\": \"{encodedPasswordStr}\"}}";
+            byte[] bodyBytes = Encoding.ASCII.GetBytes(bodyJson);
+
+            CommunicationProtocol answer = client.SendAndReceive("set_password", bodyBytes, loginSession, "json");
+
+            return answer;
+        }
+
+        public CommunicationProtocol DeletePassword(string source, string loginSession)
+        {
+            byte[] bodyBytes = Encoding.ASCII.GetBytes(source);
+
+            CommunicationProtocol answer = client.SendAndReceive("delete_password", bodyBytes, loginSession, "ascii");
+
+            return answer;
+        }
+
+        public string DecryptPassword(byte[] encryptedPassword)
+        {
+            byte[] decryptedPassword = csp.Decrypt(encryptedPassword, false);
+            string decryptedPasswordStr = Encoding.ASCII.GetString(decryptedPassword);
+
+            return decryptedPasswordStr;
         }
     }
 }

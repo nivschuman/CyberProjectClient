@@ -15,11 +15,21 @@ namespace PasswordManagerClient
             IPAddress serverIP = IPAddress.Parse("127.0.0.1");
             PasswordManagerClient passwordManagerClient = new PasswordManagerClient(serverIP, 8080);
 
+            //login
             CommunicationProtocol answer = passwordManagerClient.LoginRequest("Niv");
-            answer = passwordManagerClient.LoginTest(answer.Body, answer.GetHeaderValue("Session"));
+            string loginSession = answer.GetHeaderValue("Session");
+            answer = passwordManagerClient.LoginTest(answer.Body, loginSession);
 
-            string bodyStr = Encoding.ASCII.GetString(answer.Body);
-            Console.WriteLine(bodyStr);
+            //set password
+            answer = passwordManagerClient.SetPassword("Youtube.com", "Password123", loginSession);
+
+            //get password
+            answer = passwordManagerClient.GetPassword("Youtube.com", loginSession);
+            Console.WriteLine(passwordManagerClient.DecryptPassword(answer.Body));
+
+            //delete password
+            answer = passwordManagerClient.DeletePassword("Youtube.com", loginSession);
+            Console.WriteLine(Encoding.ASCII.GetString(answer.Body));
 
             Console.ReadLine();
         }
