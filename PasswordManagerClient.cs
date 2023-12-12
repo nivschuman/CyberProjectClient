@@ -14,37 +14,48 @@ namespace PasswordManagerClient
     {
         private Client client;
         private RSACryptoServiceProvider csp;
-        private string session;
-        public PasswordManagerClient(IPAddress serverIP, int serverPort)
+        public PasswordManagerClient(IPAddress serverIP, int serverPort, string publicKeyFileName, string privateKeyFileName, bool createNewRSAKeys)
         {
-            this.client = new Client(serverIP, serverPort);
-            this.session = "-";
+            client = new Client(serverIP, serverPort);
 
-            this.csp = new RSACryptoServiceProvider(2048);
+            csp = new RSACryptoServiceProvider(2048);
+
+            if(createNewRSAKeys)
+            {
+                CreateNewRSAKeys(publicKeyFileName, privateKeyFileName);
+            }
+            else
+            {
+                ImportRSAKeys(publicKeyFileName, privateKeyFileName);
+            }
+        }
+
+        public void ImportRSAKeys(string publicKeyFileName, string privateKeyFileName)
+        {
             int read;
 
-            if(File.Exists("PublicKey"))
+            if (File.Exists(publicKeyFileName))
             {
-                csp.ImportRSAPublicKey(File.ReadAllBytes("PublicKey"), out read);
-            }
-            else
-            {
-                File.WriteAllBytes("PublicKey", csp.ExportRSAPublicKey());
+                csp.ImportRSAPublicKey(File.ReadAllBytes(publicKeyFileName), out read);
             }
 
-            if (File.Exists("PrivateKey"))
+            if (File.Exists(privateKeyFileName))
             {
-                csp.ImportRSAPrivateKey(File.ReadAllBytes("PrivateKey"), out read);
+                csp.ImportRSAPrivateKey(File.ReadAllBytes(privateKeyFileName), out read);
             }
-            else
-            {
-                File.WriteAllBytes("PrivateKey", csp.ExportRSAPublicKey());
-            }
+        }
+
+        public void CreateNewRSAKeys(string publicKeyFileName, string privateKeyFileName)
+        {
+            csp = new RSACryptoServiceProvider(2048);
+
+            File.WriteAllBytes(publicKeyFileName, csp.ExportRSAPublicKey());
+            File.WriteAllBytes(privateKeyFileName, csp.ExportRSAPrivateKey());
         }
 
         public CommunicationProtocol CreateUser(string userName)
         {
-            string publicKey = System.Convert.ToBase64String(File.ReadAllBytes("PublicKey"));
+            string publicKey = System.Convert.ToBase64String(csp.ExportRSAPublicKey());
 
             string body = $"{{\"userName\":\"{userName}\",\"publicKey\":\"{publicKey}\"}}";
             byte[] bodyBytes = Encoding.ASCII.GetBytes(body);

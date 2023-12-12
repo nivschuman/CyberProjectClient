@@ -13,10 +13,15 @@ namespace PasswordManagerClient
         static void Main(string[] args)
         {
             IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-            PasswordManagerClient passwordManagerClient = new PasswordManagerClient(serverIP, 8080);
+            PasswordManagerClient passwordManagerClient = new PasswordManagerClient(serverIP, 8080, "PublicKey", "PrivateKey", false);
+
+            CommunicationProtocol answer;
+
+            //create new user
+            //answer = passwordManagerClient.CreateUser("Niv");
 
             //login
-            CommunicationProtocol answer = passwordManagerClient.LoginRequest("Niv");
+            answer = passwordManagerClient.LoginRequest("Niv");
             string loginSession = answer.GetHeaderValue("Session");
             answer = passwordManagerClient.LoginTest(answer.Body, loginSession);
 
