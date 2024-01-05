@@ -13,7 +13,8 @@ namespace PasswordManagerClient
         static void Main(string[] args)
         {
             IPAddress serverIP = IPAddress.Parse("127.0.0.1");
-            PasswordManagerClient passwordManagerClient = new PasswordManagerClient(serverIP, 8080, "PublicKey", "PrivateKey", false);
+            PasswordManagerClient passwordManagerClient = new PasswordManagerClient(serverIP, 8080);
+            passwordManagerClient.ImportRSAKeys("PublicKey", "PrivateKey");
 
             CommunicationProtocol answer;
 

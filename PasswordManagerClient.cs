@@ -14,20 +14,10 @@ namespace PasswordManagerClient
     {
         private Client client;
         private RSACryptoServiceProvider csp;
-        public PasswordManagerClient(IPAddress serverIP, int serverPort, string publicKeyFileName, string privateKeyFileName, bool createNewRSAKeys)
+        public PasswordManagerClient(IPAddress serverIP, int serverPort)
         {
             client = new Client(serverIP, serverPort);
-
             csp = new RSACryptoServiceProvider(2048);
-
-            if(createNewRSAKeys)
-            {
-                CreateNewRSAKeys(publicKeyFileName, privateKeyFileName);
-            }
-            else
-            {
-                ImportRSAKeys(publicKeyFileName, privateKeyFileName);
-            }
         }
 
         public void ImportRSAKeys(string publicKeyFileName, string privateKeyFileName)
