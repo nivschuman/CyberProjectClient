@@ -33,6 +33,10 @@ namespace PasswordManagerClient
             answer = passwordManagerClient.GetPassword("Youtube.com", loginSession);
             Console.WriteLine(passwordManagerClient.DecryptPassword(answer.Body));
 
+            //get sources
+            answer = passwordManagerClient.GetSources(loginSession);
+            Console.WriteLine(Encoding.ASCII.GetString(answer.Body));
+
             //delete password
             answer = passwordManagerClient.DeletePassword("Youtube.com", loginSession);
             Console.WriteLine(Encoding.ASCII.GetString(answer.Body));

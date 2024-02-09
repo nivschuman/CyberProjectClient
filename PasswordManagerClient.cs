@@ -72,6 +72,15 @@ namespace PasswordManagerClient
             return answer;
         }
 
+        public CommunicationProtocol GetSources(string loginSession)
+        {
+            byte[] emptyBody = new byte[0];
+
+            CommunicationProtocol answer = client.SendAndReceive("get_sources", emptyBody, loginSession);
+
+            return answer;
+        }
+
         public CommunicationProtocol GetPassword(string source, string loginSession)
         {
             byte[] bodyBytes = Encoding.ASCII.GetBytes(source);
