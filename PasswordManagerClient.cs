@@ -14,10 +14,22 @@ namespace PasswordManagerClient
     {
         private Client client;
         private RSACryptoServiceProvider csp;
-        public PasswordManagerClient(IPAddress serverIP, int serverPort)
+        private string keysDirectoryName;
+
+        public PasswordManagerClient(IPAddress serverIP, int serverPort) : this(serverIP, serverPort, "keys")
+        {
+        }
+        public PasswordManagerClient(IPAddress serverIP, int serverPort, string keysDirectoryName)
         {
             client = new Client(serverIP, serverPort);
             csp = new RSACryptoServiceProvider(2048);
+
+            this.keysDirectoryName = keysDirectoryName;
+
+            if(!Directory.Exists(keysDirectoryName))
+            {
+                Directory.CreateDirectory(keysDirectoryName);
+            }
         }
 
         public void ImportRSAKeys(string publicKeyFileName, string privateKeyFileName)
@@ -39,8 +51,11 @@ namespace PasswordManagerClient
         {
             csp = new RSACryptoServiceProvider(2048);
 
-            File.WriteAllBytes(publicKeyFileName, csp.ExportRSAPublicKey());
-            File.WriteAllBytes(privateKeyFileName, csp.ExportRSAPrivateKey());
+            string publicKeyPath = Path.Combine(keysDirectoryName, publicKeyFileName);
+            string privateKeyPath = Path.Combine(keysDirectoryName, privateKeyFileName);
+
+            File.WriteAllBytes(publicKeyPath, csp.ExportRSAPublicKey());
+            File.WriteAllBytes(privateKeyPath, csp.ExportRSAPrivateKey());
         }
 
         public CommunicationProtocol CreateUser(string userName)
