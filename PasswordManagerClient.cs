@@ -128,6 +128,15 @@ namespace PasswordManagerClient
             return answer;
         }
 
+        public CommunicationProtocol DeleteUser(string loginSession)
+        {
+            byte[] emptyBody = new byte[0];
+
+            CommunicationProtocol answer = client.SendAndReceive("delete_user", emptyBody, loginSession);
+
+            return answer;
+        }
+
         public string DecryptPassword(byte[] encryptedPassword)
         {
             byte[] decryptedPassword = csp.Decrypt(encryptedPassword, false);

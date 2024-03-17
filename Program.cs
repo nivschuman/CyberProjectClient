@@ -41,6 +41,9 @@ namespace PasswordManagerClient
             answer = passwordManagerClient.DeletePassword("Youtube.com", loginSession);
             Console.WriteLine(Encoding.ASCII.GetString(answer.Body));
 
+            //delete user
+            //answer = passwordManagerClient.DeleteUser(loginSession);
+
             Console.ReadLine();
         }
 
