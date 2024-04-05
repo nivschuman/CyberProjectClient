@@ -27,12 +27,18 @@ namespace PasswordManagerClient
                 Reason = PMErrorReason.ConnectionTimeouted;
                 Details = "Connection timed out.\r\nA connection attempt failed because the connected party did not properly respond after a period of time, or the established connection failed because the connected host has failed to respond.";
             }
+            else
+            {
+                Reason = PMErrorReason.Unknown;
+                Details = "Unknown";
+            }
         }
     }
 
     enum PMErrorReason
     {
         ConnectionRefused,
-        ConnectionTimeouted
+        ConnectionTimeouted,
+        Unknown
     }
 }
