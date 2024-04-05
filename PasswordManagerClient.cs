@@ -65,7 +65,18 @@ namespace PasswordManagerClient
             string body = $"{{\"userName\":\"{userName}\",\"publicKey\":\"{publicKey}\"}}";
             byte[] bodyBytes = Encoding.ASCII.GetBytes(body);
 
-            CommunicationProtocol answer = client.SendAndReceive("create_user", bodyBytes, "-", "json");
+            CommunicationProtocol answer;
+
+            try
+            {
+                answer = client.SendAndReceive("create_user", bodyBytes, "-", "json");
+            }
+            catch(SocketException e)
+            {
+                PMClientException pme = new PMClientException(e);
+
+                throw pme;
+            }
 
             return answer;
         }
@@ -73,7 +84,18 @@ namespace PasswordManagerClient
         public CommunicationProtocol LoginRequest(string userName)
         {
             byte[] bodyBytes = Encoding.ASCII.GetBytes(userName);
-            CommunicationProtocol answer = client.SendAndReceive("login_request", bodyBytes, "*", "ascii");
+            CommunicationProtocol answer;
+
+            try
+            {
+                answer = client.SendAndReceive("login_request", bodyBytes, "*", "ascii");
+            }
+            catch(SocketException e)
+            {
+                PMClientException pme = new PMClientException(e);
+
+                throw pme;
+            }
 
             return answer;
         }
@@ -82,7 +104,18 @@ namespace PasswordManagerClient
         {
             byte[] decryptedNumber = csp.Decrypt(encryptedNumber, false);
 
-            CommunicationProtocol answer = client.SendAndReceive("login_test", decryptedNumber, loginSession, "bytes");
+            CommunicationProtocol answer;
+
+            try
+            {
+                answer = client.SendAndReceive("login_test", decryptedNumber, loginSession, "bytes");
+            }
+            catch (SocketException e)
+            {
+                PMClientException pme = new PMClientException(e);
+
+                throw pme;
+            }
 
             return answer;
         }
@@ -91,7 +124,18 @@ namespace PasswordManagerClient
         {
             byte[] emptyBody = new byte[0];
 
-            CommunicationProtocol answer = client.SendAndReceive("get_sources", emptyBody, loginSession);
+            CommunicationProtocol answer;
+
+            try
+            {
+                answer = client.SendAndReceive("get_sources", emptyBody, loginSession);
+            }
+            catch (SocketException e)
+            {
+                PMClientException pme = new PMClientException(e);
+
+                throw pme;
+            }
 
             return answer;
         }
@@ -100,7 +144,19 @@ namespace PasswordManagerClient
         {
             byte[] bodyBytes = Encoding.ASCII.GetBytes(source);
 
-            CommunicationProtocol answer = client.SendAndReceive("get_password", bodyBytes, loginSession, "ascii");
+            CommunicationProtocol answer;
+
+            try
+            {
+                answer = client.SendAndReceive("get_password", bodyBytes, loginSession, "ascii");
+            }
+            catch(SocketException e)
+            {
+                PMClientException pme = new PMClientException(e);
+
+                throw pme;
+            }
+            
 
             return answer;
         }
@@ -114,7 +170,18 @@ namespace PasswordManagerClient
             string bodyJson = $"{{\"source\": \"{source}\", \"password\": \"{encodedPasswordStr}\"}}";
             byte[] bodyBytes = Encoding.ASCII.GetBytes(bodyJson);
 
-            CommunicationProtocol answer = client.SendAndReceive("set_password", bodyBytes, loginSession, "json");
+            CommunicationProtocol answer;
+
+            try
+            {
+                answer = client.SendAndReceive("set_password", bodyBytes, loginSession, "json");
+            }
+            catch(SocketException e)
+            {
+                PMClientException pme = new PMClientException(e);
+
+                throw pme;
+            }
 
             return answer;
         }
@@ -132,7 +199,18 @@ namespace PasswordManagerClient
         {
             byte[] emptyBody = new byte[0];
 
-            CommunicationProtocol answer = client.SendAndReceive("delete_user", emptyBody, loginSession);
+            CommunicationProtocol answer;
+
+            try
+            {
+                answer = client.SendAndReceive("delete_user", emptyBody, loginSession);
+            }
+            catch(SocketException e)
+            {
+                PMClientException pme = new PMClientException(e);
+
+                throw pme;
+            }
 
             return answer;
         }

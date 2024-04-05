@@ -13,17 +13,25 @@ namespace PasswordManagerClient
     {
         private IPAddress serverIP;
         private IPEndPoint serverEndPoint;
+        private int receiveTimeout;
 
-        public Client(IPAddress serverIP, int serverPort)
+        public Client(IPAddress serverIP, int serverPort, int receiveTimeout)
         {
             this.serverIP = serverIP;
             this.serverEndPoint = new IPEndPoint(serverIP, serverPort);
+            this.receiveTimeout = receiveTimeout;
+        }
+
+        public Client(IPAddress serverIP, int serverPort) : this(serverIP, serverPort, 120000)
+        {
+
         }
 
         public CommunicationProtocol SendAndReceive(string method, byte[] body, string session, string contentType)
         {
             //create and connect socket
             Socket client = new Socket(serverIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            client.ReceiveTimeout = receiveTimeout;
             client.Connect(serverEndPoint);
 
             //req
@@ -52,6 +60,7 @@ namespace PasswordManagerClient
         {
             //create and connect socket
             Socket client = new Socket(serverIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            client.ReceiveTimeout = receiveTimeout;
             client.Connect(serverEndPoint);
 
             //req
