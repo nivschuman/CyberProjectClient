@@ -20,6 +20,13 @@ namespace PasswordManagerClient
             }
         }
 
+        public override string ToString()
+        {
+            string headersStr = String.Join(":", headers.Select(kvp => $"{kvp.Key}={kvp.Value}"));
+
+            return $"{reqRes}:{headersStr}:\n{BitConverter.ToString(body)}";
+        }
+
         public CommunicationProtocol(string reqRes, Dictionary<string, string> headers, byte[] body)
         {
             this.reqRes = reqRes;

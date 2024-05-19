@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PasswordManagerClient")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+db615760fa5d95983ec2605c82458ce691c86d32")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4155a9af31f4cca5d1ecee9fc9698e07b085acae")]
 [assembly: System.Reflection.AssemblyProductAttribute("PasswordManagerClient")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PasswordManagerClient")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
