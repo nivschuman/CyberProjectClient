@@ -16,12 +16,17 @@ namespace PasswordManagerClient
         private RSACryptoServiceProvider csp;
         private string keysDirectoryName;
 
-        public PasswordManagerClient(IPAddress serverIP, int serverPort) : this(serverIP, serverPort, "keys")
+        public PasswordManagerClient(IPAddress serverIP, int serverPort) : this(serverIP, serverPort, "keys", true)
         {
         }
-        public PasswordManagerClient(IPAddress serverIP, int serverPort, string keysDirectoryName)
+
+        public PasswordManagerClient(IPAddress serverIP, int serverPort, bool withSSL) : this(serverIP, serverPort, "keys", withSSL)
         {
-            client = new Client(serverIP, serverPort);
+        }
+
+        public PasswordManagerClient(IPAddress serverIP, int serverPort, string keysDirectoryName, bool withSSL)
+        {
+            client = new Client(serverIP, serverPort, withSSL);
             csp = new RSACryptoServiceProvider(2048);
 
             this.keysDirectoryName = keysDirectoryName;
