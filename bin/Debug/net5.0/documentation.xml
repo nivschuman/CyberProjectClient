@@ -1,0 +1,346 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PasswordManagerClient</name>
+    </assembly>
+    <members>
+        <member name="T:PasswordManagerClient.Client">
+            <summary>
+            Represents a communication protocol client that communicates with a server using either plain TCP or SSL/TLS
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.Client.serverIP">
+            <summary>
+            The IP address of the server.
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.Client.serverEndPoint">
+            <summary>
+            The endpoint of the server including IP address and port.
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.Client.receiveTimeout">
+            <summary>
+            The receive timeout duration in milliseconds.
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.Client.withSSL">
+            <summary>
+            Indicates whether to use SSL/TLS for communication.
+            </summary>
+        </member>
+        <member name="M:PasswordManagerClient.Client.#ctor(System.Net.IPAddress,System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:PasswordManagerClient.Client"/> class with the specified server IP, port, receive timeout, and SSL usage.
+            </summary>
+            <param name="serverIP">The IP address of the server.</param>
+            <param name="serverPort">The port number of the server.</param>
+            <param name="receiveTimeout">The receive timeout in milliseconds.</param>
+            <param name="withSSL">A value indicating whether to use SSL/TLS for communication.</param>
+        </member>
+        <member name="M:PasswordManagerClient.Client.#ctor(System.Net.IPAddress,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:PasswordManagerClient.Client"/> class with the specified server IP and port.
+            Uses default values for receive timeout (120000 ms) and SSL usage (true).
+            </summary>
+            <param name="serverIP">The IP address of the server.</param>
+            <param name="serverPort">The port number of the server.</param>
+        </member>
+        <member name="M:PasswordManagerClient.Client.#ctor(System.Net.IPAddress,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:PasswordManagerClient.Client"/> class with the specified server IP, port, and SSL usage.
+            Uses a default value for receive timeout (120000 ms).
+            </summary>
+            <param name="serverIP">The IP address of the server.</param>
+            <param name="serverPort">The port number of the server.</param>
+            <param name="withSSL">A value indicating whether to use SSL/TLS for communication.</param>
+        </member>
+        <member name="M:PasswordManagerClient.Client.SendAndReceive(System.String,System.Byte[],System.String,System.String)">
+            <summary>
+            Sends a request to the server and receives a response.
+            </summary>
+            <param name="method">The method to be used in the request.</param>
+            <param name="body">The body of the request as a byte array.</param>
+            <param name="session">The session token for the request.</param>
+            <param name="contentType">The content type of the request body.</param>
+            <returns>The <see cref="T:PasswordManagerClient.CommunicationProtocol"/> object received from the server.</returns>
+        </member>
+        <member name="M:PasswordManagerClient.Client.SendAndReceive(System.String,System.Byte[],System.String)">
+            <summary>
+            Sends a request to the server and receives a response.
+            </summary>
+            <param name="method">The method to be used in the request.</param>
+            <param name="body">The body of the request as a byte array.</param>
+            <param name="session">The session token for the request.</param>
+            <returns>The <see cref="T:PasswordManagerClient.CommunicationProtocol"/> object received from the server.</returns>
+        </member>
+        <member name="M:PasswordManagerClient.Client.ReceiveAsByteArray(System.Net.Sockets.Socket)">
+            <summary>
+            Receives data from the server as a byte array.
+            </summary>
+            <param name="client">The client socket.</param>
+            <returns>The received data as a byte array.</returns>
+        </member>
+        <member name="M:PasswordManagerClient.Client.SendAndReceiveSSL(System.String,System.Byte[],System.String)">
+            <summary>
+            Sends a request to the server and receives a response over SSL.
+            </summary>
+            <param name="method">The method to be used in the request.</param>
+            <param name="body">The body of the request as a byte array.</param>
+            <param name="session">The session token for the request.</param>
+            <returns>The <see cref="T:PasswordManagerClient.CommunicationProtocol"/> object received from the server.</returns>
+        </member>
+        <member name="M:PasswordManagerClient.Client.SendAndReceiveSSL(System.String,System.Byte[],System.String,System.String)">
+            <summary>
+            Sends a request to the server and receives a response over SSL.
+            </summary>
+            <param name="method">The method to be used in the request.</param>
+            <param name="body">The body of the request as a byte array.</param>
+            <param name="session">The session token for the request.</param>
+            <param name="contentType">The content type of the request body.</param>
+            <returns>The <see cref="T:PasswordManagerClient.CommunicationProtocol"/> object received from the server.</returns>
+        </member>
+        <member name="M:PasswordManagerClient.Client.ReceiveAsByteArraySSL(System.Net.Security.SslStream)">
+            <summary>
+            Receives data from the server as a byte array over SSL.
+            </summary>
+            <param name="sslStream">The SSL stream.</param>
+            <returns>The received data as a byte array.</returns>
+        </member>
+        <member name="M:PasswordManagerClient.Client.ValidateServerCertificate(System.Object,System.Security.Cryptography.X509Certificates.X509Certificate,System.Security.Cryptography.X509Certificates.X509Chain,System.Net.Security.SslPolicyErrors)">
+            <summary>
+            Validates the server certificate. Currently, it always returns true.
+            </summary>
+            <param name="sender">The sender object.</param>
+            <param name="certificate">The certificate to validate.</param>
+            <param name="chain">The certificate chain.</param>
+            <param name="sslPolicyErrors">Any SSL policy errors.</param>
+            <returns>true if the certificate is valid; otherwise, false.</returns>
+        </member>
+        <member name="T:PasswordManagerClient.CommunicationProtocol">
+            <summary>
+            Represents a communication protocol message.
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.CommunicationProtocol.reqRes">
+            <summary>
+            String to state whether message is request (req) or response (res).
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.CommunicationProtocol.headers">
+            <summary>
+            Contains all message headers, key is header name and value is header value.
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.CommunicationProtocol.body">
+            <summary>
+            The body of the message as a byte array.
+            </summary>
+        </member>
+        <member name="M:PasswordManagerClient.CommunicationProtocol.ToString">
+            <summary>
+            Turns message into string, reqRes:headerName=headerValue...:\nbody format.
+            </summary>
+            <returns>Formatted string of message.</returns>
+        </member>
+        <member name="M:PasswordManagerClient.CommunicationProtocol.#ctor(System.String,System.Collections.Generic.Dictionary{System.String,System.String},System.Byte[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:PasswordManagerClient.CommunicationProtocol"/> class with the specified reqRes, headers and body.
+            </summary>
+            <param name="reqRes">Request (req) or response (res) string.</param>
+            <param name="headers">Message headers where key is header name, value is header value.</param>
+            <param name="body">The body of the message in bytes.</param>
+        </member>
+        <member name="M:PasswordManagerClient.CommunicationProtocol.GetHeaderValue(System.String)">
+            <summary>
+            Get the value of the header with the specified header name.
+            </summary>
+            <param name="headerName">The name of the header.</param>
+            <returns>The value of the header with header name.</returns>
+        </member>
+        <member name="M:PasswordManagerClient.CommunicationProtocol.SetHeaderValue(System.String,System.String)">
+            <summary>
+            Set the value of a header with the specified header name.
+            </summary>
+            <param name="headerName">The name of the header.</param>
+            <param name="headerValue">The value to set the header to.</param>
+        </member>
+        <member name="M:PasswordManagerClient.CommunicationProtocol.ToBytes">
+            <summary>
+            Turns the message into bytes format.
+            </summary>
+            <returns>The message as a byte array.</returns>
+        </member>
+        <member name="M:PasswordManagerClient.CommunicationProtocol.FromBytes(System.Byte[])">
+            <summary>
+            Generates a <see cref="T:PasswordManagerClient.CommunicationProtocol"/> object from a bytes representation of it.
+            </summary>
+            <param name="byteArr">The byte array which represents the communication protocol message.</param>
+            <returns>A <see cref="T:PasswordManagerClient.CommunicationProtocol"/> object representation of the message.</returns>
+        </member>
+        <member name="T:PasswordManagerClient.PasswordManagerClient">
+            <summary>
+            Represents a client for the password manager application.
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.PasswordManagerClient.client">
+            <summary>
+            Communication protocol client to use to speak with server.
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.PasswordManagerClient.csp">
+            <summary>
+            The RSA public key and private key service provider.
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.PasswordManagerClient.keysDirectoryName">
+            <summary>
+            The name of the directory in which private and public keys are stored.
+            </summary>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.#ctor(System.Net.IPAddress,System.Int32)">
+            <summary>
+            Initializes a <see cref="T:PasswordManagerClient.PasswordManagerClient"/> class with the specified serverIP and serverPort.
+            Uses default values for keysDirectoryName ("keys") and SSL usage (true).
+            </summary>
+            <param name="serverIP">The IP adress of the server.</param>
+            <param name="serverPort">The port of the server.</param>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.#ctor(System.Net.IPAddress,System.Int32,System.Boolean)">
+            <summary>
+            Initializes a <see cref="T:PasswordManagerClient.PasswordManagerClient"/> class with the specified serverIP, serverPort and SSL usage.
+            Uses default value for keysDirectoryName ("keys").
+            </summary>
+            <param name="serverIP">The IP address of the server.</param>
+            <param name="serverPort">The port of the server.</param>
+            <param name="withSSL">Indicates whether to use SSL or not.</param>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.#ctor(System.Net.IPAddress,System.Int32,System.String,System.Boolean)">
+            <summary>
+            Initializes a <see cref="T:PasswordManagerClient.PasswordManagerClient"/> class with the specified serverIP, serverPort, keys directory name and SSL usage.
+            </summary>
+            <param name="serverIP">The IP address of the server.</param>
+            <param name="serverPort">The port of the server.</param>
+            <param name="keysDirectoryName">The name of the keys directory.</param>
+            <param name="withSSL">Indicates whether to use SSL or not.</param>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.ImportRSAKeys(System.String,System.String)">
+            <summary>
+            Imports RSA service provider keys from public key file and private key file.
+            The public key and private key in the files should be in the PKCS#1 format.
+            </summary>
+            <param name="publicKeyFileName">The name of the public key file.</param>
+            <param name="privateKeyFileName">The name of the private key file.</param>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.CreateNewRSAKeys(System.String,System.String)">
+            <summary>
+            Generates new 2048 bit RSA public key and private key and stores them in files.
+            Files are stored inside keys directory.
+            </summary>
+            <param name="publicKeyFileName">The name of the file with the public key.</param>
+            <param name="privateKeyFileName">The name of the file with the private key.</param>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.CreateUser(System.String)">
+            <summary>
+            Sends request to server to create new user with csp public key and given username.
+            </summary>
+            <param name="userName">The username for the user to be created.</param>
+            <returns><see cref="T:PasswordManagerClient.CommunicationProtocol"/> object representing server response.</returns>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.LoginRequest(System.String)">
+            <summary>
+            Sends a login request to the server for user with userName as username.
+            </summary>
+            <param name="userName">The name of the user to login to.</param>
+            <returns><see cref="T:PasswordManagerClient.CommunicationProtocol"/> object representing server response (body is random 64 bit encrypted number).</returns>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.LoginTest(System.Byte[],System.String)">
+            <summary>
+            Send login test request to server after having sent a login request.
+            Random 64 bit number is decrypted using csp private key and is passed to server for verification.
+            </summary>
+            <param name="encryptedNumber">The random encrypted 64 bit number that the server returned at login request.</param>
+            <param name="loginSession">The session token for the session that the server generated and returned at login request.</param>
+            <returns><see cref="T:PasswordManagerClient.CommunicationProtocol"/> object representing server response (body is success or error message).</returns>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.GetSources(System.String)">
+            <summary>
+            Request server to return list of all password sources for logged in user.
+            </summary>
+            <param name="loginSession">The session token for the session generated at login.</param>
+            <returns><see cref="T:PasswordManagerClient.CommunicationProtocol"/> object representing server response (body is json list of sources).</returns>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.GetPassword(System.String,System.String)">
+            <summary>
+            Request server to return password for specified source for logged in user.
+            </summary>
+            <param name="source">The source of the password.</param>
+            <param name="loginSession">The session token for the session generated at login.</param>
+            <returns><see cref="T:PasswordManagerClient.CommunicationProtocol"/> object representing server response (body is encrypted password).</returns>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.SetPassword(System.String,System.String,System.String)">
+            <summary>
+            Request server to set password for source for the logged in user.
+            Password is encrypted with csp public key before it is sent to server.
+            </summary>
+            <param name="source">The source of the password.</param>
+            <param name="password">The password.</param>
+            <param name="loginSession">The session token for the session generated at login.</param>
+            <returns><see cref="T:PasswordManagerClient.CommunicationProtocol"/> object representing server response (body is success or error message).</returns>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.DeletePassword(System.String,System.String)">
+            <summary>
+            Request server to delete the password of source for logged in user.
+            </summary>
+            <param name="source">The source of the password.</param>
+            <param name="loginSession">The session token for the session generated at login.</param>
+            <returns><see cref="T:PasswordManagerClient.CommunicationProtocol"/> object representing server response (body is success or error message).</returns>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.DeleteUser(System.String)">
+            <summary>
+            Request server to delete the logged in user.
+            </summary>
+            <param name="loginSession">The session token for the session generated at login.</param>
+            <returns><see cref="T:PasswordManagerClient.CommunicationProtocol"/> object representing server response (body is success or error message).</returns>
+        </member>
+        <member name="M:PasswordManagerClient.PasswordManagerClient.DecryptPassword(System.Byte[])">
+            <summary>
+            Decryptes an encrypted password using csp private key.
+            Password should have been encrypted with matching csp public key.
+            </summary>
+            <param name="encryptedPassword">The encrypted password as byte array.</param>
+            <returns>The password as a string.</returns>
+        </member>
+        <member name="T:PasswordManagerClient.PMClientException">
+            <summary>
+            Class to represent an exception for a password manager client.
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.PMClientException.SE">
+            <summary>
+            The socket exception that was raised.
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.PMClientException.Details">
+            <summary>
+            Details of the reason for the exception
+            </summary>
+        </member>
+        <member name="F:PasswordManagerClient.PMClientException.Reason">
+            <summary>
+            The <see cref="T:PasswordManagerClient.PMErrorReason"/> reason for the exception.
+            </summary>
+        </member>
+        <member name="M:PasswordManagerClient.PMClientException.#ctor(System.Net.Sockets.SocketException)">
+            <summary>
+            Initializes a <see cref="T:PasswordManagerClient.PMClientException"/> exception class.
+            </summary>
+            <param name="e">The socket exception that was raised.</param>
+        </member>
+        <member name="T:PasswordManagerClient.PMErrorReason">
+            <summary>
+            Reasons for an exception being raised at password manager client.
+            </summary>
+        </member>
+    </members>
+</doc>

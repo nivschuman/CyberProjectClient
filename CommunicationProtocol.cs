@@ -6,20 +6,41 @@ using System.Threading.Tasks;
 
 namespace PasswordManagerClient
 {
+    /// <summary>
+    /// Represents a communication protocol message.
+    /// </summary>
     public class CommunicationProtocol
     {
+        /// <summary>
+        /// String to state whether message is request (req) or response (res).
+        /// </summary>
         private string reqRes;
+
+        /// <summary>
+        /// Contains all message headers, key is header name and value is header value.
+        /// </summary>
         private Dictionary<string, string> headers;
+
+        /// <summary>
+        /// The body of the message as a byte array.
+        /// </summary>
         private byte[] body;
 
         public byte[] Body
         {
+            ///<summary>
+            ///Getter for body attribute.
+            ///</summary>
             get
             {
                 return body;
             }
         }
 
+        /// <summary>
+        /// Turns message into string, reqRes:headerName=headerValue...:\nbody format.
+        /// </summary>
+        /// <returns>Formatted string of message.</returns>
         public override string ToString()
         {
             string headersStr = String.Join(":", headers.Select(kvp => $"{kvp.Key}={kvp.Value}"));
@@ -27,6 +48,12 @@ namespace PasswordManagerClient
             return $"{reqRes}:{headersStr}:\n{BitConverter.ToString(body)}";
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommunicationProtocol"/> class with the specified reqRes, headers and body.
+        /// </summary>
+        /// <param name="reqRes">Request (req) or response (res) string.</param>
+        /// <param name="headers">Message headers where key is header name, value is header value.</param>
+        /// <param name="body">The body of the message in bytes.</param>
         public CommunicationProtocol(string reqRes, Dictionary<string, string> headers, byte[] body)
         {
             this.reqRes = reqRes;
@@ -34,16 +61,30 @@ namespace PasswordManagerClient
             this.body = body;
         }
 
+        /// <summary>
+        /// Get the value of the header with the specified header name.
+        /// </summary>
+        /// <param name="headerName">The name of the header.</param>
+        /// <returns>The value of the header with header name.</returns>
         public string GetHeaderValue(string headerName)
         {
             return headers[headerName];
         }
 
+        /// <summary>
+        /// Set the value of a header with the specified header name.
+        /// </summary>
+        /// <param name="headerName">The name of the header.</param>
+        /// <param name="headerValue">The value to set the header to.</param>
         public void SetHeaderValue(string headerName, string headerValue)
         {
             headers[headerName] = headerValue;
         }
 
+        /// <summary>
+        /// Turns the message into bytes format.
+        /// </summary>
+        /// <returns>The message as a byte array.</returns>
         public byte[] ToBytes()
         {
             int paramsLength = 0;
@@ -95,6 +136,11 @@ namespace PasswordManagerClient
             return byteArr;
         }
 
+        /// <summary>
+        /// Generates a <see cref="CommunicationProtocol"/> object from a bytes representation of it.
+        /// </summary>
+        /// <param name="byteArr">The byte array which represents the communication protocol message.</param>
+        /// <returns>A <see cref="CommunicationProtocol"/> object representation of the message.</returns>
         public static CommunicationProtocol FromBytes(byte[] byteArr)
         {
             //req res

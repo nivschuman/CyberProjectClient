@@ -11,13 +11,38 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace PasswordManagerClient
 {
+    /// <summary>
+    /// Represents a communication protocol client that communicates with a server using either plain TCP or SSL/TLS
+    /// </summary>
     class Client
     {
+        /// <summary>
+        /// The IP address of the server.
+        /// </summary>
         private IPAddress serverIP;
+
+        /// <summary>
+        /// The endpoint of the server including IP address and port.
+        /// </summary>
         private IPEndPoint serverEndPoint;
+
+        /// <summary>
+        /// The receive timeout duration in milliseconds.
+        /// </summary>
         private int receiveTimeout;
+
+        /// <summary>
+        /// Indicates whether to use SSL/TLS for communication.
+        /// </summary>
         private bool withSSL;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Client"/> class with the specified server IP, port, receive timeout, and SSL usage.
+        /// </summary>
+        /// <param name="serverIP">The IP address of the server.</param>
+        /// <param name="serverPort">The port number of the server.</param>
+        /// <param name="receiveTimeout">The receive timeout in milliseconds.</param>
+        /// <param name="withSSL">A value indicating whether to use SSL/TLS for communication.</param>
         public Client(IPAddress serverIP, int serverPort, int receiveTimeout, bool withSSL)
         {
             this.serverIP = serverIP;
@@ -26,15 +51,36 @@ namespace PasswordManagerClient
             this.withSSL = withSSL;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Client"/> class with the specified server IP and port.
+        /// Uses default values for receive timeout (120000 ms) and SSL usage (true).
+        /// </summary>
+        /// <param name="serverIP">The IP address of the server.</param>
+        /// <param name="serverPort">The port number of the server.</param>
         public Client(IPAddress serverIP, int serverPort) : this(serverIP, serverPort, 120000, true)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Client"/> class with the specified server IP, port, and SSL usage.
+        /// Uses a default value for receive timeout (120000 ms).
+        /// </summary>
+        /// <param name="serverIP">The IP address of the server.</param>
+        /// <param name="serverPort">The port number of the server.</param>
+        /// <param name="withSSL">A value indicating whether to use SSL/TLS for communication.</param>
         public Client(IPAddress serverIP, int serverPort, bool withSSL) : this(serverIP, serverPort, 120000, withSSL)
         {
 
         }
 
+        /// <summary>
+        /// Sends a request to the server and receives a response.
+        /// </summary>
+        /// <param name="method">The method to be used in the request.</param>
+        /// <param name="body">The body of the request as a byte array.</param>
+        /// <param name="session">The session token for the request.</param>
+        /// <param name="contentType">The content type of the request body.</param>
+        /// <returns>The <see cref="CommunicationProtocol"/> object received from the server.</returns>
         public CommunicationProtocol SendAndReceive(string method, byte[] body, string session, string contentType)
         {
             if(withSSL)
@@ -69,6 +115,13 @@ namespace PasswordManagerClient
             return receivedCommunicationProtocol;
         }
 
+        /// <summary>
+        /// Sends a request to the server and receives a response.
+        /// </summary>
+        /// <param name="method">The method to be used in the request.</param>
+        /// <param name="body">The body of the request as a byte array.</param>
+        /// <param name="session">The session token for the request.</param>
+        /// <returns>The <see cref="CommunicationProtocol"/> object received from the server.</returns>
         public CommunicationProtocol SendAndReceive(string method, byte[] body, string session)
         {
             if(withSSL)
@@ -102,6 +155,11 @@ namespace PasswordManagerClient
             return receivedCommunicationProtocol;
         }
 
+        /// <summary>
+        /// Receives data from the server as a byte array.
+        /// </summary>
+        /// <param name="client">The client socket.</param>
+        /// <returns>The received data as a byte array.</returns>
         private byte[] ReceiveAsByteArray(Socket client)
         {
             //receive req, res
@@ -165,6 +223,13 @@ namespace PasswordManagerClient
             return byteArr;
         }
 
+        /// <summary>
+        /// Sends a request to the server and receives a response over SSL.
+        /// </summary>
+        /// <param name="method">The method to be used in the request.</param>
+        /// <param name="body">The body of the request as a byte array.</param>
+        /// <param name="session">The session token for the request.</param>
+        /// <returns>The <see cref="CommunicationProtocol"/> object received from the server.</returns>
         private CommunicationProtocol SendAndReceiveSSL(string method, byte[] body, string session)
         {
             //create and connect socket
@@ -201,6 +266,14 @@ namespace PasswordManagerClient
             return receivedCommunicationProtocol;
         }
 
+        /// <summary>
+        /// Sends a request to the server and receives a response over SSL.
+        /// </summary>
+        /// <param name="method">The method to be used in the request.</param>
+        /// <param name="body">The body of the request as a byte array.</param>
+        /// <param name="session">The session token for the request.</param>
+        /// <param name="contentType">The content type of the request body.</param>
+        /// <returns>The <see cref="CommunicationProtocol"/> object received from the server.</returns>
         private CommunicationProtocol SendAndReceiveSSL(string method, byte[] body, string session, string contentType)
         {
             //create and connect socket
@@ -238,6 +311,11 @@ namespace PasswordManagerClient
             return receivedCommunicationProtocol;
         }
 
+        /// <summary>
+        /// Receives data from the server as a byte array over SSL.
+        /// </summary>
+        /// <param name="sslStream">The SSL stream.</param>
+        /// <returns>The received data as a byte array.</returns>
         private byte[] ReceiveAsByteArraySSL(SslStream sslStream)
         {
             //receive req, res
@@ -301,7 +379,14 @@ namespace PasswordManagerClient
             return byteArr;
         }
 
-        //currently authentication always returns true
+        /// <summary>
+        /// Validates the server certificate. Currently, it always returns true.
+        /// </summary>
+        /// <param name="sender">The sender object.</param>
+        /// <param name="certificate">The certificate to validate.</param>
+        /// <param name="chain">The certificate chain.</param>
+        /// <param name="sslPolicyErrors">Any SSL policy errors.</param>
+        /// <returns>true if the certificate is valid; otherwise, false.</returns>
         private static bool ValidateServerCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             if (sslPolicyErrors == SslPolicyErrors.None)

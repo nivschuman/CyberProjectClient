@@ -7,12 +7,30 @@ using System.Threading.Tasks;
 
 namespace PasswordManagerClient
 {
+    /// <summary>
+    /// Class to represent an exception for a password manager client.
+    /// </summary>
     class PMClientException : Exception
     {
+        /// <summary>
+        /// The socket exception that was raised.
+        /// </summary>
         public SocketException SE;
+
+        /// <summary>
+        /// Details of the reason for the exception
+        /// </summary>
         public string Details;
+
+        /// <summary>
+        /// The <see cref="PMErrorReason"/> reason for the exception.
+        /// </summary>
         public PMErrorReason Reason;
 
+        /// <summary>
+        /// Initializes a <see cref="PMClientException"/> exception class.
+        /// </summary>
+        /// <param name="e">The socket exception that was raised.</param>
         public PMClientException(SocketException e)
         {
             SE = e;
@@ -35,6 +53,9 @@ namespace PasswordManagerClient
         }
     }
 
+    /// <summary>
+    /// Reasons for an exception being raised at password manager client.
+    /// </summary>
     enum PMErrorReason
     {
         ConnectionRefused,
