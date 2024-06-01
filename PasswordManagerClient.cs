@@ -114,6 +114,9 @@ namespace PasswordManagerClient
         /// </summary>
         /// <param name="userName">The username for the user to be created.</param>
         /// <returns><see cref="CommunicationProtocol"/> object representing server response.</returns>
+        /// <exception cref="PMClientException">
+        /// Thrown when sockets exceptions are thrown at client.
+        /// </exception>
         public CommunicationProtocol CreateUser(string userName)
         {
             string publicKey = System.Convert.ToBase64String(csp.ExportRSAPublicKey());
@@ -142,6 +145,9 @@ namespace PasswordManagerClient
         /// </summary>
         /// <param name="userName">The name of the user to login to.</param>
         /// <returns><see cref="CommunicationProtocol"/> object representing server response (body is random 64 bit encrypted number).</returns>
+        /// <exception cref="PMClientException">
+        /// Thrown when sockets exceptions are thrown at client.
+        /// </exception>
         public CommunicationProtocol LoginRequest(string userName)
         {
             byte[] bodyBytes = Encoding.ASCII.GetBytes(userName);
@@ -168,6 +174,9 @@ namespace PasswordManagerClient
         /// <param name="encryptedNumber">The random encrypted 64 bit number that the server returned at login request.</param>
         /// <param name="loginSession">The session token for the session that the server generated and returned at login request.</param>
         /// <returns><see cref="CommunicationProtocol"/> object representing server response (body is success or error message).</returns>
+        /// <exception cref="PMClientException">
+        /// Thrown when sockets exceptions are thrown at client.
+        /// </exception>
         public CommunicationProtocol LoginTest(byte[] encryptedNumber, string loginSession)
         {
             byte[] decryptedNumber = csp.Decrypt(encryptedNumber, false);
@@ -193,6 +202,9 @@ namespace PasswordManagerClient
         /// </summary>
         /// <param name="loginSession">The session token for the session generated at login.</param>
         /// <returns><see cref="CommunicationProtocol"/> object representing server response (body is json list of sources).</returns>
+        /// <exception cref="PMClientException">
+        /// Thrown when sockets exceptions are thrown at client.
+        /// </exception>
         public CommunicationProtocol GetSources(string loginSession)
         {
             byte[] emptyBody = new byte[0];
@@ -219,6 +231,9 @@ namespace PasswordManagerClient
         /// <param name="source">The source of the password.</param>
         /// <param name="loginSession">The session token for the session generated at login.</param>
         /// <returns><see cref="CommunicationProtocol"/> object representing server response (body is encrypted password).</returns>
+        /// <exception cref="PMClientException">
+        /// Thrown when sockets exceptions are thrown at client.
+        /// </exception>
         public CommunicationProtocol GetPassword(string source, string loginSession)
         {
             byte[] bodyBytes = Encoding.ASCII.GetBytes(source);
@@ -248,6 +263,9 @@ namespace PasswordManagerClient
         /// <param name="password">The password.</param>
         /// <param name="loginSession">The session token for the session generated at login.</param>
         /// <returns><see cref="CommunicationProtocol"/> object representing server response (body is success or error message).</returns>
+        /// <exception cref="PMClientException">
+        /// Thrown when sockets exceptions are thrown at client.
+        /// </exception>
         public CommunicationProtocol SetPassword(string source, string password, string loginSession)
         {
             byte[] passwordBytes = Encoding.ASCII.GetBytes(password);
@@ -279,11 +297,25 @@ namespace PasswordManagerClient
         /// <param name="source">The source of the password.</param>
         /// <param name="loginSession">The session token for the session generated at login.</param>
         /// <returns><see cref="CommunicationProtocol"/> object representing server response (body is success or error message).</returns>
+        /// <exception cref="PMClientException">
+        /// Thrown when sockets exceptions are thrown at client.
+        /// </exception>
         public CommunicationProtocol DeletePassword(string source, string loginSession)
         {
             byte[] bodyBytes = Encoding.ASCII.GetBytes(source);
 
-            CommunicationProtocol answer = client.SendAndReceive("delete_password", bodyBytes, loginSession, "ascii");
+            CommunicationProtocol answer;
+
+            try
+            {
+                answer = client.SendAndReceive("delete_password", bodyBytes, loginSession, "ascii");
+            }
+            catch (SocketException e)
+            {
+                PMClientException pme = new PMClientException(e);
+
+                throw pme;
+            }
 
             return answer;
         }
@@ -293,6 +325,9 @@ namespace PasswordManagerClient
         /// </summary>
         /// <param name="loginSession">The session token for the session generated at login.</param>
         /// <returns><see cref="CommunicationProtocol"/> object representing server response (body is success or error message).</returns>
+        /// <exception cref="PMClientException">
+        /// Thrown when sockets exceptions are thrown at client.
+        /// </exception>
         public CommunicationProtocol DeleteUser(string loginSession)
         {
             byte[] emptyBody = new byte[0];
